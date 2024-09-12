@@ -1,22 +1,20 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
-import { UserServices } from "./User.service";
-import { TUser } from "./User.interface";
+import { userServices } from "./user.service";
 
-const createUserAndAdmin = catchAsync(async (req, res) => {
-  const userData: TUser = req.body;
-  //   console.log(userData);
-  const result = await UserServices.createUserAndAdminToDB(userData);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "User registered successfully",
-    data: result,
-  });
+const getAllUsers = catchAsync(async (req, res) => {
+  console.log(req.user);
+  const result = await userServices.getAllUsersFromDb();
+  try {
+    res.status(httpStatus.OK).json({
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "All Users Retrived successfully",
+      data: result,
+    });
+  } catch (error) {}
 });
 
-export const UsersAndAdminController = {
-  createUserAndAdmin,
+export const userController = {
+  getAllUsers,
 };

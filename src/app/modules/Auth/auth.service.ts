@@ -1,3 +1,12 @@
+import httpStatus from "http-status";
+import AppError from "../../errors/AppError";
+import { TUser } from "../User/user.interface";
+import { User } from "../User/user.model";
+import { TLogin, tokenPayload } from "./auth.interface";
+import { AnyExpression } from "mongoose";
+import { createToken } from "./auth.utils";
+import config from "../../config";
+
 const signUpIntoDb = async (payLoad: TUser) => {
   // check use already exist
   const isUserExist = await User.findOne({ email: payLoad.email });
@@ -27,8 +36,8 @@ const loginDb = async (payLoad: TLogin) => {
   };
   const token = createToken(
     tokenPayload,
-    config.Access_Token_Secret as string,
-    config.JWT_ACCESS_EXPIRE_IN as string
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string
   );
   const tokenWithBearer = token;
 

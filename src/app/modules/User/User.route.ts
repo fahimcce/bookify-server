@@ -1,15 +1,10 @@
 import express from "express";
+import { userController } from "./user.controller";
 
-import validateRequest from "../../middlewares/validRequest";
-import { UsersAndAdminController } from "./User.controller";
-import { userValidationSchema } from "./User.validation";
+// import authGuared from "../../middileWare/authGuared";
 
 const router = express.Router();
 
-router.post(
-  "/signup",
-  validateRequest(userValidationSchema),
-  UsersAndAdminController.createUserAndAdmin
-);
+router.get("/", userController.getAllUsers);
 
-export const UserRoutes = router;
+export const userRouters = router;

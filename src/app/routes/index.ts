@@ -1,22 +1,32 @@
 import { Router } from "express";
-import { UserRoutes } from "../modules/User/User.route";
-import { RoomRoutes } from "../modules/Room/Room.route";
-import { SlotRoutes } from "../modules/Slots/Slots.route";
+import { userRouters } from "../modules/User/user.route";
+import { slotRoute } from "../modules/Slots/Slots.route";
+import { authRoutes } from "../modules/Auth/auth.route";
+import { bookingsRouter } from "../modules/Booking/booking.route";
+import { roomRoutes } from "../modules/Room/Room.route";
 
 const router = Router();
 
 const moduleRoutes = [
   {
     path: "/auth",
-    route: UserRoutes,
+    route: authRoutes,
+  },
+  {
+    path: "/users",
+    route: userRouters,
   },
   {
     path: "/rooms",
-    route: RoomRoutes,
+    route: roomRoutes,
   },
   {
     path: "/slots",
-    route: SlotRoutes,
+    route: slotRoute,
+  },
+  {
+    path: "/",
+    route: bookingsRouter,
   },
 ];
 
