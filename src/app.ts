@@ -15,12 +15,11 @@ app.use(cors());
 // application routes
 app.use("/api", router);
 
-const test = async (req: Request, res: Response) => {
-  const a = 10;
-  res.send(a);
-};
-
-app.get("/", test);
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    message: "Welcome to meeting Room booking backend API",
+  });
+});
 
 //global error handling
 app.use(globalErrorHandler);
