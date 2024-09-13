@@ -7,7 +7,7 @@ const handleDuplicateError = (err: any): TGenericErrorResponse => {
   const errorSources: TErrorSources = [
     {
       path: "",
-      message: `Department of ${extraxted_msg} is already exists`,
+      message: `Room ${extraxted_msg} is already exists`,
     },
   ];
 

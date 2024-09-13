@@ -2,21 +2,21 @@ import httpStatus from "http-status";
 import QueryBuilder from "../../builder/QueryBuilder";
 import AppError from "../../errors/AppError";
 import { TMeetingRoom } from "./Room.interface";
-import { MeetingRoom } from "./Room.model";
+import { Rooms } from "./Room.model";
 import mongoose from "mongoose";
 
 const createRoomIntoDB = async (payload: TMeetingRoom) => {
-  const result = await MeetingRoom.create(payload);
+  const result = await Rooms.create(payload);
   return result;
 };
 
 const getSingleRoomFromDB = async (id: string) => {
-  const result = await MeetingRoom.findById(id);
+  const result = await Rooms.findById(id);
   return result;
 };
 
 const getAllRoomsFromDB = async (query: Record<string, unknown>) => {
-  const meetingQuery = new QueryBuilder(MeetingRoom.find(), query);
+  const meetingQuery = new QueryBuilder(Rooms.find(), query);
 
   const result = await meetingQuery.modelQuery;
   return result;
@@ -35,7 +35,7 @@ const updateRoomsIntoDB = async (id: string, payload: TMeetingRoom) => {
   } = payload;
 
   // Find the existing room document
-  const existingRoom = await MeetingRoom.findById(id);
+  const existingRoom = await Rooms.findById(id);
   if (!existingRoom) {
     throw new AppError(httpStatus.BAD_REQUEST, "ID Not Found!!");
   }
@@ -58,7 +58,7 @@ const updateRoomsIntoDB = async (id: string, payload: TMeetingRoom) => {
   };
 
   // Update the room in the database
-  const result = await MeetingRoom.findByIdAndUpdate(id, modifiedUpdateData, {
+  const result = await Rooms.findByIdAndUpdate(id, modifiedUpdateData, {
     new: true,
     runValidators: true,
   });
@@ -71,7 +71,7 @@ const deleteRoomFromDB = async (id: string) => {
   try {
     session.startTransaction();
 
-    const deletedRoom = await MeetingRoom.findByIdAndUpdate(
+    const deletedRoom = await Rooms.findByIdAndUpdate(
       id,
       { isDeleted: true },
       { new: true, session }

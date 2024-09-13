@@ -2,10 +2,11 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { Slot } from "../Slots/Slots.model";
 import { TBooking } from "./booking.interface";
-import { MeetingRoom } from "../Room/Room.model";
+
 import { Bookings } from "./booking.model";
 import handleEmptyData from "../../utils/handleEmptyData";
 import { User } from "../User/user.model";
+import { Rooms } from "../Room/Room.model";
 
 const createBookingToDB = async (payload: TBooking) => {
   // check slot by date and room available or not
@@ -19,7 +20,7 @@ const createBookingToDB = async (payload: TBooking) => {
     throw new AppError(httpStatus.NOT_FOUND, "Slot already Booked");
   }
   // get rooms
-  const targetedRooms = await MeetingRoom.findById(payload.room);
+  const targetedRooms = await Rooms.findById(payload.room);
   if (!targetedRooms) {
     throw new AppError(httpStatus.NOT_FOUND, "Room not Found");
   }
