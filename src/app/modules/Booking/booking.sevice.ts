@@ -2,13 +2,12 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { Slot } from "../Slots/Slots.model";
 import { TBooking } from "./booking.interface";
-
+import { Rooms } from "../Room/Room.model";
 import { Bookings } from "./booking.model";
 import handleEmptyData from "../../utils/handleEmptyData";
 import { User } from "../User/user.model";
-import { Rooms } from "../Room/Room.model";
 
-const createBookingToDB = async (payload: TBooking) => {
+const addBookingDb = async (payload: TBooking) => {
   // check slot by date and room available or not
   const isExistSlot = await Slot.find({
     _id: payload.slots,
@@ -40,14 +39,14 @@ const createBookingToDB = async (payload: TBooking) => {
     .populate("user");
   return lastBookinged;
 };
-const getAllBookingFromDB = async () => {
+const getAllBookingFromDb = async () => {
   const result = await Bookings.find({ isDeleted: false })
     .populate("room")
     .populate("slots")
     .populate("user");
   return handleEmptyData(result);
 };
-const getMyBookingsFromDB = async (payload: string) => {
+const getMyBookings = async (payload: string) => {
   // get the user First
   const userData = await User.findOne({ email: payload, isDeleted: false });
   const userId = userData?._id;
@@ -57,7 +56,7 @@ const getMyBookingsFromDB = async (payload: string) => {
     .populate("user");
   return handleEmptyData(result);
 };
-const updateBookingToDB = async (id: string, payload: TBooking) => {
+const updateBookingDb = async (id: string, payload: TBooking) => {
   await Bookings.findByIdAndUpdate(id, payload, { new: true });
   const bookedi = await Bookings.findById(id)
     .populate("room")
@@ -65,7 +64,7 @@ const updateBookingToDB = async (id: string, payload: TBooking) => {
     .populate("user");
   return bookedi;
 };
-const deleteBookingTODB = async (id: string) => {
+const deleteBookingDb = async (id: string) => {
   // confirm bookings is exist
   const isExist = await Bookings.findById(id);
   if (!isExist) {
@@ -79,9 +78,9 @@ const deleteBookingTODB = async (id: string) => {
   return result;
 };
 export const bookingService = {
-  createBookingToDB,
-  getAllBookingFromDB,
-  getMyBookingsFromDB,
-  updateBookingToDB,
-  deleteBookingTODB,
+  addBookingDb,
+  getAllBookingFromDb,
+  getMyBookings,
+  updateBookingDb,
+  deleteBookingDb,
 };

@@ -4,7 +4,7 @@ import sendResponse from "../../utils/sendResponse";
 import { bookingService } from "./booking.sevice";
 
 const addBooking = catchAsync(async (req, res) => {
-  const result = await bookingService.createBookingToDB(req.body);
+  const result = await bookingService.addBookingDb(req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -13,7 +13,7 @@ const addBooking = catchAsync(async (req, res) => {
   });
 });
 const getAllBooking = catchAsync(async (req, res) => {
-  const reslut = await bookingService.getAllBookingFromDB();
+  const reslut = await bookingService.getAllBookingFromDb();
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -22,7 +22,7 @@ const getAllBooking = catchAsync(async (req, res) => {
   });
 });
 const myBookings = catchAsync(async (req, res) => {
-  const reslut = await bookingService.getMyBookingsFromDB(req.user.email);
+  const reslut = await bookingService.getMyBookings(req.user.email);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -31,10 +31,7 @@ const myBookings = catchAsync(async (req, res) => {
   });
 });
 const udpateBooking = catchAsync(async (req, res) => {
-  const result = await bookingService.updateBookingToDB(
-    req.params.id,
-    req.body
-  );
+  const result = await bookingService.updateBookingDb(req.params.id, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -43,7 +40,7 @@ const udpateBooking = catchAsync(async (req, res) => {
   });
 });
 const deleteBooking = catchAsync(async (req, res) => {
-  const result = await bookingService.deleteBookingTODB(req.params.id);
+  const result = await bookingService.deleteBookingDb(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

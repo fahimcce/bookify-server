@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 import { TBooking } from "./booking.interface";
 
 const bookingModelSchema = new Schema<TBooking>({
-  room: { type: Schema.Types.ObjectId, required: true, ref: "Rooms" },
+  room: { type: Schema.Types.ObjectId, required: true, ref: "Room" },
   slots: [{ type: Schema.Types.ObjectId, ref: "Slot" }],
   user: {
     type: Schema.Types.ObjectId,
@@ -23,5 +23,9 @@ const bookingModelSchema = new Schema<TBooking>({
   },
   isDeleted: { type: Boolean, default: false },
 });
+bookingModelSchema.index(
+  { room: 1, date: 1, startTime: 1, endTime: 1 },
+  { unique: true }
+);
 
 export const Bookings = model<TBooking>("Bookings", bookingModelSchema);

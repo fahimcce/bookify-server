@@ -38,4 +38,4 @@ const meetingRoomSchema = new Schema<TMeetingRoom>(
   }
 );
 
-export const Rooms = model("MeetingRoom", meetingRoomSchema);
+export const Rooms = model("Room", meetingRoomSchema);
