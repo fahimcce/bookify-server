@@ -6,7 +6,7 @@ export type TUser = {
   password: string;
   phone: string;
   address: string;
-  role: TUserRole;
+  role?: TUserRole;
   isDeleted?: boolean;
 };
 

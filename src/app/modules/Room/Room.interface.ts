@@ -5,5 +5,6 @@ export type TMeetingRoom = {
   capacity: number;
   pricePerSlot: number;
   amenities: string[];
+  images: string[];
   isDeleted: boolean;
 };

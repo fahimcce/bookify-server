@@ -37,16 +37,24 @@ const createSlotIntoDB = async (payload: TSlots) => {
 };
 
 const getAllSlotFromDB = async (payload: any) => {
-  if (payload.date || payload.roomId) {
-    const result = await Slot.find({
-      $or: [{ date: payload.date }, { room: payload.roomId }],
-      isBooked: false,
-    });
-    return handleEmptyData(result);
-  } else {
-    const result = await Slot.find({ isBooked: false });
-    return handleEmptyData(result);
+  const query: any = { isBooked: false };
+
+  // Apply filters if provided in the query
+  if (payload.date && payload.roomId) {
+    // Both date and roomId are present, so we use $and to ensure both conditions are matched
+    query["$and"] = [{ date: payload.date }, { room: payload.roomId }];
+  } else if (payload.date) {
+    // Only date is provided
+    query["date"] = payload.date;
+  } else if (payload.roomId) {
+    // Only roomId is provided
+    query["room"] = payload.roomId;
   }
+
+  // Find slots and populate the room details (including room name)
+  const result = await Slot.find(query).populate("room", "name");
+
+  return handleEmptyData(result);
 };
 
 export const SlotServices = {

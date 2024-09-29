@@ -31,6 +31,7 @@ const updateRoomsIntoDB = async (id: string, payload: TMeetingRoom) => {
     capacity,
     pricePerSlot,
     amenities,
+    images,
     ...remainingRoomData
   } = payload;
 
@@ -54,6 +55,8 @@ const updateRoomsIntoDB = async (id: string, payload: TMeetingRoom) => {
     ...(floorNo ? { floorNo } : {}),
     ...(capacity ? { capacity } : {}),
     ...(pricePerSlot ? { pricePerSlot } : {}),
+    ...(images ? { images } : {}),
+
     amenities: updatedAmenities,
   };
 

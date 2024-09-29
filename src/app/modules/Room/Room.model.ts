@@ -28,6 +28,10 @@ const meetingRoomSchema = new Schema<TMeetingRoom>(
       type: [String],
       required: true,
     },
+    images: {
+      type: [String],
+      required: false,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

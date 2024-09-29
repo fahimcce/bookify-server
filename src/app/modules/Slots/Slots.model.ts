@@ -6,7 +6,7 @@ const slotSchema = new Schema<TSlots>(
     room: {
       type: Schema.Types.ObjectId,
       required: [true, "room id need for slot"],
-      ref: "MeetingRoom",
+      ref: "Room",
     },
     date: { type: Date, required: [true, "slot date is required"] },
     startTime: { type: String, required: [true, "start time need"] },

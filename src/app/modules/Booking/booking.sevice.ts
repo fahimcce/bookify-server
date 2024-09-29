@@ -8,37 +8,44 @@ import handleEmptyData from "../../utils/handleEmptyData";
 import { User } from "../User/user.model";
 
 const addBookingDb = async (payload: TBooking) => {
-  // check slot by date and room available or not
-  const isExistSlot = await Slot.find({
-    _id: payload.slots,
+  // Check if slots are available
+  const availableSlots = await Slot.find({
+    _id: { $in: payload.slots },
     date: payload.date,
     isBooked: false,
   });
 
-  if (!isExistSlot.length) {
-    throw new AppError(httpStatus.NOT_FOUND, "Slot already Booked");
+  if (availableSlots.length !== payload.slots.length) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Some slots are already booked");
   }
-  // get rooms
-  const targetedRooms = await Rooms.findById(payload.room);
-  if (!targetedRooms) {
-    throw new AppError(httpStatus.NOT_FOUND, "Room not Found");
-  }
-  payload.totalAmount = targetedRooms?.pricePerSlot * payload.slots.length;
-  const result = await Bookings.create(payload);
-  const newBookingId = result._id;
-  // change the isBooked status
-  await Slot.updateMany(
-    { _id: payload.slots },
-    { isBooked: true },
-    { new: true }
-  );
 
-  const lastBookinged = await Bookings.findById(newBookingId)
+  // Get the room
+  const targetedRoom = await Rooms.findById(payload.room);
+  if (!targetedRoom) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Room ID ${payload.room} is invalid or not found`
+    );
+  }
+
+  // Calculate total amount
+  payload.totalAmount = targetedRoom.pricePerSlot * payload.slots.length;
+
+  // Create the booking
+  const result = await Bookings.create(payload);
+
+  // Mark slots as booked
+  await Slot.updateMany({ _id: { $in: payload.slots } }, { isBooked: true });
+
+  // Populate the result for returning
+  const lastBooking = await Bookings.findById(result._id)
     .populate("room")
     .populate("slots")
     .populate("user");
-  return lastBookinged;
+
+  return lastBooking;
 };
+
 const getAllBookingFromDb = async () => {
   const result = await Bookings.find({ isDeleted: false })
     .populate("room")
