@@ -6,4 +6,5 @@ export type TLogin = {
 export type tokenPayload = {
   email: string;
   role: string;
+  name?: string;
 };

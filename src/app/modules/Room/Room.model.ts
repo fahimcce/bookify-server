@@ -1,45 +1,19 @@
 import { model, Schema } from "mongoose";
-import { TMeetingRoom } from "./Room.interface";
+import { TRooms } from "./room.interface";
+import { timeStamp } from "console";
 
-const meetingRoomSchema = new Schema<TMeetingRoom>(
+const roomsModelSchema = new Schema<TRooms>(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    roomNo: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
-    floorNo: {
-      type: Number,
-      required: true,
-    },
-    capacity: {
-      type: Number,
-      required: true,
-    },
-    pricePerSlot: {
-      type: Number,
-      required: true,
-    },
-    amenities: {
-      type: [String],
-      required: true,
-    },
-    images: {
-      type: [String],
-      required: false,
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
+    name: { type: String, required: true },
+    roomNo: { type: Number, required: true },
+    floorNo: { type: Number, required: true },
+    capacity: { type: Number, required: true },
+    pricePerSlot: { type: Number, required: true },
+    amenities: [{ type: String }],
+    roomImg: [{ type: String, default: "" }],
+    isDeleted: { type: Boolean, default: false },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-export const Rooms = model("Room", meetingRoomSchema);
+export const Rooms = model<TRooms>("Rooms", roomsModelSchema);

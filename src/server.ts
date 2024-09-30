@@ -1,43 +1,14 @@
-import mongoose from 'mongoose';
-import app from './app';
-
-import { Server } from 'http';
-import config from './app/config';
-
-let server:Server;
+import mongoose from "mongoose";
+import config from "./app/config";
+import app from "./app";
 
 async function main() {
-  try {
-    await mongoose.connect(config.database_url as string);
+  await mongoose.connect(config.db_url as string);
 
-    server = app.listen(config.port, () => {
-      console.log(`app is listening on port ${config.port}`);
-    });
-  } catch (err) {
-    console.log(err);
-  }
+  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+
+  app.listen(config.port, () => {
+    console.log(`app listening on port ${config.port}`);
+  });
 }
-
 main();
-
-
-// Handle unhandledRejection for asyncronus
-process.on('unhandledRejection',()=>{
-  console.log(`UnhandledRejection is Detected, Shut Down the Server..`)
-  if(server){
-    server.close(()=>{
-      process.exit(1)
-    })
-  }
-  process.exit(1)
-})
-
-// Handle uncaughtException for Synchronus
-process.on('uncaughtException',()=>{
-  console.log(`uncaughtException is Detected, Shut Down the Server..`)
-  process.exit(1)
-})
-
-
-// console.log(x)
-

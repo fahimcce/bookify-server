@@ -1,13 +1,17 @@
-// import { USER_ROLE } from "../Auth/auth.constant";
+import { Model } from "mongoose";
+
 export type TUserRole = "admin" | "user";
+
 export type TUser = {
   name: string;
   email: string;
   password: string;
   phone: string;
   address: string;
-  role?: TUserRole;
-  isDeleted?: boolean;
+  role: TUserRole;
+  isDeleted: boolean;
 };
 
-// export type TUserRole = keyof typeof USER_ROLE;
+export interface UserModel extends Model<TUser> {
+  isPasswordMatched(plaingTextPassword: string, hashPassword: string): Promise<TUser>;
+}

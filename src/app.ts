@@ -1,28 +1,23 @@
+import express from "express";
 import cors from "cors";
-import express, { Application, NextFunction, Request, Response } from "express";
-import cookieParser from "cookie-parser";
 import router from "./app/routes";
-import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
-import { notFound } from "./app/middlewares/notFound";
+import notFound from "./app/middileWare/notFound";
+import globalErrorhandler from "./app/middileWare/globalErrorHandler";
 
-const app: Application = express();
+const app = express();
 
-//parsers
+app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
+
 app.use(express.json());
-app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
-// application routes
+// application route
 app.use("/api", router);
 
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "Welcome to meeting Room booking backend API",
-  });
+app.get("/", (req, res) => {
+  res.send("Bookify Welcoming you.Enter this Arena,Find Your best Room.");
 });
-
-//global error handling
-app.use(globalErrorHandler);
 app.use(notFound);
+// global error
+app.use(globalErrorhandler);
 
 export default app;
