@@ -8,12 +8,24 @@ import { USER_ROLE } from "../User/user.constant";
 
 const router = express.Router();
 
-router.post("/signup", validateRequest(userValidations.createUserValidationSchma), authController.signUp);
+router.post(
+  "/signup",
+  validateRequest(userValidations.createUserValidationSchma),
+  authController.signUp
+);
 
 router.get("/users", authController.getOneUser);
 
-router.post("/login", validateRequest(authValidation.loginValidationSchema), authController.login);
+router.post(
+  "/login",
+  validateRequest(authValidation.loginValidationSchema),
+  authController.login
+);
 
-router.put("/status/:id", authGuared(USER_ROLE.admin), authController.makeAdmin);
+router.put(
+  "/status/:id",
+  authGuared(USER_ROLE.admin),
+  authController.makeAdmin
+);
 
 export const authRoutes = router;

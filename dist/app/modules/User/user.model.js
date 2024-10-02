@@ -32,15 +32,10 @@ const UserModelSchema = new mongoose_1.Schema({
 // password becrypt before save
 UserModelSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        this.password = yield bcrypt_1.default.hash(this.password, Number(config_1.default.BCRYPT_SALTROUND));
+        this.password = yield bcrypt_1.default.hash(this.password, Number(config_1.default.BCRYPT_SALT_ROUNDS));
         next();
     });
 });
-// doc for post middle ware hide the password
-// UserModelSchema.post("save", function (doc, next) {
-//   doc.password = "";
-//   next();
-// });
 // check password is matched
 UserModelSchema.statics.isPasswordMatched = function (plaingTextPassword, hashPassword) {
     return __awaiter(this, void 0, void 0, function* () {

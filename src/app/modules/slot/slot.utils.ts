@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { Slot } from "./slot.model";
 
 type TSlots = {
@@ -22,7 +22,11 @@ export const generateSlot = async (startTime: string, endTime: string) => {
   return slots;
 };
 
-export const checkSlotExist = async (roomId: mongoose.Types.ObjectId, date: Date, slots: TSlots[]) => {
+export const checkSlotExist = async (
+  roomId: mongoose.Types.ObjectId,
+  date: Date,
+  slots: TSlots[]
+) => {
   const existingSlots = await Slot.find({
     room: roomId,
     date: date,
@@ -34,7 +38,11 @@ export const checkSlotExist = async (roomId: mongoose.Types.ObjectId, date: Date
   return existingSlots.length > 0;
 };
 
-export const createSlots = async (roomId: mongoose.Types.ObjectId, date: Date, slots: TSlots[]) => {
+export const createSlots = async (
+  roomId: mongoose.Types.ObjectId,
+  date: Date,
+  slots: TSlots[]
+) => {
   const newSlots = slots?.map((slot) => ({
     room: roomId,
     date: date,

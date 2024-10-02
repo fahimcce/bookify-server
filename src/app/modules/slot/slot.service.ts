@@ -1,19 +1,29 @@
 import httpStatus from "http-status";
 import AppError from "../../erros/AppError";
-import { Rooms } from "../Room/room.model";
+
 import { TSlot } from "./slot.interface";
 import { Slot } from "./slot.model";
 import { checkSlotExist, createSlots, generateSlot } from "./slot.utils";
 
 const addSlotDb = async (payload: TSlot) => {
   //create slots times
-  const createSlotTime = await generateSlot(payload?.startTime, payload?.endTime);
+  const createSlotTime = await generateSlot(
+    payload?.startTime,
+    payload?.endTime
+  );
 
   // check slot time is available
-  const slotExist = await checkSlotExist(payload.room, payload.date, createSlotTime);
+  const slotExist = await checkSlotExist(
+    payload.room,
+    payload.date,
+    createSlotTime
+  );
 
   if (slotExist) {
-    throw new AppError(httpStatus.NOT_FOUND, "One or more slots already exist within the specified time range.");
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "One or more slots already exist within the specified time range."
+    );
   }
   return await createSlots(payload.room, payload.date, createSlotTime);
 };
@@ -21,7 +31,11 @@ const addSlotDb = async (payload: TSlot) => {
 const getAllSlotDB = async (payload: any) => {
   if (Object?.values(payload)?.length) {
     const result = await Slot.find({
-      $or: [{ date: payload.date }, { room: payload.roomId }, { isBooked: payload.isBooked }],
+      $or: [
+        { date: payload.date },
+        { room: payload.roomId },
+        { isBooked: payload.isBooked },
+      ],
     })
       .populate("room")
       .sort(payload.sort);
@@ -51,9 +65,16 @@ const updateSlots = async (id: string, payload: TSlot) => {
   // empty array for creatd slots
   const comingSlots = [];
   if (payload.startTime && payload.endTime) {
-    comingSlots.push({ startTime: payload.startTime, endTime: payload.endTime });
+    comingSlots.push({
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+    });
     // check the slot shedule is available
-    const slotNotexist = await checkSlotExist(payload.room, payload.date, comingSlots);
+    const slotNotexist = await checkSlotExist(
+      payload.room,
+      payload.date,
+      comingSlots
+    );
     if (slotNotexist) {
       throw new AppError(httpStatus.CONFLICT, "Slot Time is not available");
     }

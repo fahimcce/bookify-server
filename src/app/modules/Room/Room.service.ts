@@ -10,24 +10,18 @@ const creatRooms = async (payLoad: TRooms) => {
 };
 // get a rooms
 const getAllRoomsFromDb = async (query: Record<string, unknown>) => {
-  // const result = await Rooms.find();
   const roomquery = new QueryBuilder(Rooms.find({ isDeleted: false }), query)
-
     .filter()
     .sort()
     .limit()
     .paginate()
-
     .roomsId();
   const result = await roomquery.modelQuery;
   const meta = await roomquery.countTotal();
   return { result, meta };
   // return result;
 };
-// get some rooms
-// const getSomeRoomsDb = async (payload: string[]) => {
-//   return Rooms.find({ _id: payload });
-// };
+
 // get a rooms
 const getAroomsFromDb = async (id: string) => {
   const result = await Rooms.findById(id);

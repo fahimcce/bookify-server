@@ -13,15 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.bookingService = void 0;
-const http_status_1 = __importDefault(require("http-status"));
-const AppError_1 = __importDefault(require("../../erros/AppError"));
-const room_model_1 = require("../Room/room.model");
-const booking_model_1 = require("./booking.model");
-const slot_model_1 = require("../slot/slot.model");
-const user_model_1 = require("../User/user.model");
 const stripe_1 = __importDefault(require("stripe"));
 const config_1 = __importDefault(require("../../config"));
-const stripe = new stripe_1.default(config_1.default.SECRET_KET);
+const user_model_1 = require("../User/user.model");
+const AppError_1 = __importDefault(require("../../erros/AppError"));
+const http_status_1 = __importDefault(require("http-status"));
+const room_model_1 = require("../Room/room.model");
+const slot_model_1 = require("../slot/slot.model");
+const booking_model_1 = require("./booking.model");
+const stripe = new stripe_1.default(config_1.default.SECRET_KEY);
 const confiremPayment = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { paymentId, total } = payload;
     const paymentIntent = yield stripe.paymentIntents.create({
@@ -45,7 +45,10 @@ const addBookingDb = (payload) => __awaiter(void 0, void 0, void 0, function* ()
         });
     });
     // console.log(payload);
-    const isUserExist = yield user_model_1.User.find({ email: payload.email, _id: payload.user });
+    const isUserExist = yield user_model_1.User.find({
+        email: payload.email,
+        _id: payload.user,
+    });
     if (!isUserExist.length) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Invalid User");
     }
@@ -56,7 +59,6 @@ const addBookingDb = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     if (!roomAvailable.length) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Room Not Found");
     }
-    // check slot by date and room available or not
     const isExistSlot = yield slot_model_1.Slot.find({
         _id: { $in: slotsids },
         isBooked: false,
@@ -65,11 +67,8 @@ const addBookingDb = (payload) => __awaiter(void 0, void 0, void 0, function* ()
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Slot is not available");
     }
     const result = yield booking_model_1.Bookings.create(payload);
-    // const newBookingId = result._id;
-    // change the isBooked status
     yield slot_model_1.Slot.updateMany({ _id: { $in: slotsids } }, { isBooked: true }, { new: true });
     return result;
-    // const lastBookinged = await Bookings.findById(newBookingId).populate("room").populate("slots").populate("user");
 });
 const getAllBookingFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield booking_model_1.Bookings.find({ isDeleted: false })
@@ -90,11 +89,6 @@ const getMyBookings = (payload) => __awaiter(void 0, void 0, void 0, function* (
         .populate("user");
     return userData;
 });
-// const updateBookingDb = async (id: string, payload: TBooking) => {
-//   await Bookings.findByIdAndUpdate(id, payload, { new: true });
-//   const bookedi = await Bookings.findById(id).populate("room").populate("slots").populate("user");
-//   return bookedi;
-// };
 const confirmBooking = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(payload);
     const result = yield booking_model_1.Bookings.findByIdAndUpdate(id, { isConfirmed: payload.status }, { new: true, runValidators: true });

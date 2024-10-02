@@ -4,7 +4,11 @@ exports.Bookings = void 0;
 const mongoose_1 = require("mongoose");
 const bookingModelSchema = new mongoose_1.Schema({
     email: { type: String, required: true },
-    isConfirmed: { type: String, enum: ["confirmed", "unconfirmed", "canceled"], default: "unconfirmed" },
+    isConfirmed: {
+        type: String,
+        enum: ["confirmed", "unconfirmed", "canceled"],
+        default: "unconfirmed",
+    },
     paymentId: { type: String, required: true },
     paymentTime: { type: Number, required: true },
     phone: { type: String, required: true },

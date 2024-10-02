@@ -21,7 +21,6 @@ const creatRooms = (payLoad) => __awaiter(void 0, void 0, void 0, function* () {
 });
 // get a rooms
 const getAllRoomsFromDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    // const result = await Rooms.find();
     const roomquery = new queryBuilder_1.default(room_model_1.Rooms.find({ isDeleted: false }), query)
         .filter()
         .sort()
@@ -33,10 +32,6 @@ const getAllRoomsFromDb = (query) => __awaiter(void 0, void 0, void 0, function*
     return { result, meta };
     // return result;
 });
-// get some rooms
-// const getSomeRoomsDb = async (payload: string[]) => {
-//   return Rooms.find({ _id: payload });
-// };
 // get a rooms
 const getAroomsFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield room_model_1.Rooms.findById(id);

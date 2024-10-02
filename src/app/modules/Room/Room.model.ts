@@ -1,6 +1,5 @@
 import { model, Schema } from "mongoose";
 import { TRooms } from "./room.interface";
-import { timeStamp } from "console";
 
 const roomsModelSchema = new Schema<TRooms>(
   {

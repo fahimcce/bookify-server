@@ -31,7 +31,11 @@ const getAllSlotDB = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     var _a;
     if ((_a = Object === null || Object === void 0 ? void 0 : Object.values(payload)) === null || _a === void 0 ? void 0 : _a.length) {
         const result = yield slot_model_1.Slot.find({
-            $or: [{ date: payload.date }, { room: payload.roomId }, { isBooked: payload.isBooked }],
+            $or: [
+                { date: payload.date },
+                { room: payload.roomId },
+                { isBooked: payload.isBooked },
+            ],
         })
             .populate("room")
             .sort(payload.sort);
@@ -62,7 +66,10 @@ const updateSlots = (id, payload) => __awaiter(void 0, void 0, void 0, function*
     // empty array for creatd slots
     const comingSlots = [];
     if (payload.startTime && payload.endTime) {
-        comingSlots.push({ startTime: payload.startTime, endTime: payload.endTime });
+        comingSlots.push({
+            startTime: payload.startTime,
+            endTime: payload.endTime,
+        });
         // check the slot shedule is available
         const slotNotexist = yield (0, slot_utils_1.checkSlotExist)(payload.room, payload.date, comingSlots);
         if (slotNotexist) {

@@ -1,5 +1,3 @@
-import { z } from "zod";
-import { slotValidation } from "./slot.validation";
 import mongoose from "mongoose";
 
 export type TSlot = {
@@ -9,5 +7,3 @@ export type TSlot = {
   endTime: string;
   isBooked?: boolean;
 };
-
-// type TSlots = z.infer<typeof slotValidation.addSlotValidationSchema>;
