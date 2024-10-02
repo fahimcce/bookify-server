@@ -12,13 +12,12 @@ const creatRooms = async (payLoad: TRooms) => {
 const getAllRoomsFromDb = async (query: Record<string, unknown>) => {
   // const result = await Rooms.find();
   const roomquery = new QueryBuilder(Rooms.find({ isDeleted: false }), query)
-    .search(searchableField)
+
     .filter()
     .sort()
     .limit()
     .paginate()
-    .range()
-    .capcity()
+
     .roomsId();
   const result = await roomquery.modelQuery;
   const meta = await roomquery.countTotal();
@@ -44,7 +43,11 @@ const updateRoomsIntoDb = async (id: string, payLoad: TRooms) => {
   return result;
 };
 const deleteRoomFromDb = async (payload: string) => {
-  const result = await Rooms.findByIdAndUpdate(payload, { isDeleted: true }, { new: true });
+  const result = await Rooms.findByIdAndUpdate(
+    payload,
+    { isDeleted: true },
+    { new: true }
+  );
   return result;
 };
 

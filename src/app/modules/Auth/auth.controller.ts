@@ -2,7 +2,6 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { authServices } from "./auth.service";
-import AppError from "../../erros/AppError";
 
 const signUp = catchAsync(async (req, res) => {
   const result = await authServices.signUpIntoDb(req.body);

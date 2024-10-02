@@ -1,13 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const user_route_1 = require("../modules/User/user.route");
-const Slots_route_1 = require("../modules/Slots/Slots.route");
+const express_1 = __importDefault(require("express"));
 const auth_route_1 = require("../modules/Auth/auth.route");
-const booking_route_1 = require("../modules/Booking/booking.route");
-const Room_route_1 = require("../modules/Room/Room.route");
-const router = (0, express_1.Router)();
-const moduleRoutes = [
+const user_route_1 = require("../modules/User/user.route");
+const room_route_1 = require("../modules/Room/room.route");
+const booking_route_1 = require("../modules/booking/booking.route");
+const slot_route_1 = require("../modules/slot/slot.route");
+const router = express_1.default.Router();
+const moudleRoute = [
     {
         path: "/auth",
         route: auth_route_1.authRoutes,
@@ -18,16 +21,16 @@ const moduleRoutes = [
     },
     {
         path: "/rooms",
-        route: Room_route_1.roomRoutes,
+        route: room_route_1.roomRoutes,
     },
     {
         path: "/slots",
-        route: Slots_route_1.slotRoute,
+        route: slot_route_1.slotRoute,
     },
     {
         path: "/",
         route: booking_route_1.bookingsRouter,
     },
 ];
-moduleRoutes.forEach((route) => router.use(route.path, route.route));
+moudleRoute.forEach((route) => router.use(route.path, route.route));
 exports.default = router;

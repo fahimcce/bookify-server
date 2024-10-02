@@ -12,20 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userServices = void 0;
-const queryBuilder_1 = __importDefault(require("../../builder/queryBuilder"));
-const user_model_1 = require("./user.model");
-const getAllUsersFromDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const userQuery = new queryBuilder_1.default(user_model_1.User.find({ isDeleted: false }), query)
-        .filter()
-        .sort();
-    const result = yield userQuery.modelQuery;
-    return result;
-});
-const deleteUserDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield user_model_1.User.findByIdAndUpdate(id, { isDeleted: true });
-});
-exports.userServices = {
-    getAllUsersFromDb,
-    deleteUserDb,
+const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
+const validateRequest = (zodSchema) => {
+    return (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        // zod validation
+        yield zodSchema.parseAsync({
+            body: req.body,
+        });
+        next();
+    }));
 };
+exports.default = validateRequest;

@@ -12,54 +12,62 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RoomControllers = void 0;
+exports.roomsController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const Room_service_1 = require("./Room.service");
-const createRoom = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield Room_service_1.RoomServices.createRoomIntoDB(req.body);
+const room_service_1 = require("./room.service");
+const createRooms = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield room_service_1.roomsServices.creatRooms(req.body);
     (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
         success: true,
+        statusCode: http_status_1.default.OK,
         message: "Room added successfully",
         data: result,
     });
 }));
-const getSingleRoom = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const result = yield Room_service_1.RoomServices.getSingleRoomFromDB(id);
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
-        success: true,
-        message: "Room retrieved successfully",
-        data: result,
-    });
-}));
+// get all rooms
 const getAllRooms = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield Room_service_1.RoomServices.getAllRoomsFromDB(req.query);
+    const result = yield room_service_1.roomsServices.getAllRoomsFromDb(req.query);
     (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
         success: true,
+        statusCode: http_status_1.default.OK,
         message: "Rooms retrieved successfully",
         data: result,
     });
 }));
-const updateRooms = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const room = req.body;
-    //   console.log(room);
-    const result = yield Room_service_1.RoomServices.updateRoomsIntoDB(id, room);
+// get a rooms
+const getArooms = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield room_service_1.roomsServices.getAroomsFromDb(req.params.id);
     (0, sendResponse_1.default)(res, {
-        statusCode: http_status_1.default.OK,
         success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Room retrieved successfully",
+        data: result,
+    });
+}));
+// get a rooms
+// const getSomeRooms = catchAsync(async (req, res) => {
+//   const result = await roomsServices.getSomeRoomsDb(req.body);
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: httpStatus.OK,
+//     message: "Room retrieved successfully",
+//     data: result,
+//   });
+// });
+// update rooms
+const updateRooms = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield room_service_1.roomsServices.updateRoomsIntoDb(req.params.id, req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
         message: "Room updated successfully",
         data: result,
     });
 }));
 const deleteRoom = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const result = yield Room_service_1.RoomServices.deleteRoomFromDB(id);
+    const result = yield room_service_1.roomsServices.deleteRoomFromDb(req.params.id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -67,10 +75,10 @@ const deleteRoom = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
-exports.RoomControllers = {
-    createRoom,
-    getSingleRoom,
+exports.roomsController = {
+    createRooms,
     getAllRooms,
+    getArooms,
     updateRooms,
     deleteRoom,
 };

@@ -7,58 +7,24 @@ class QueryBuilder<T> {
     this.modelQuery = modelQuery;
     this.query = query;
   }
-  // search method
-  search(searchAbleField: string[]) {
-    const search = this.query?.search;
-    if (this?.query?.search) {
-      this.modelQuery = this.modelQuery.find({
-        $or: [
-          // Add search conditions for the specified fields
-          ...searchAbleField.map((fields) => ({ [fields]: { $regex: search, $options: "i" } } as FilterQuery<T>)),
 
-          // Add search condition for the 'amenities' array field
-          { amenities: { $elemMatch: { $regex: search, $options: "i" } } },
-        ],
-      });
-    }
-    return this;
-  }
-  // filtering
   filter() {
     const queryObj = { ...this.query }; //copy of all queries
-    const excludeFields = ["search", "sort", "limit", "range", "page", "fields", "capacity", "roomsId"];
+    const excludeFields = [
+      "search",
+      "sort",
+      "limit",
+      "range",
+      "page",
+      "fields",
+      "capacity",
+      "roomsId",
+    ];
     excludeFields.forEach((el) => delete queryObj[el]);
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
     return this;
   }
-  // range
-  range() {
-    const range = this.query.range;
-    if (range) {
-      const newRange = (range as string).split("-");
-      const lowestPrice = Number(newRange[0]);
-      const hiestprice = Number(newRange[1]);
-      // let rangevalue = newRange.map((range) => new RegExp(`^${range}$`, "i"));
-      this.modelQuery = this.modelQuery.find({
-        pricePerSlot: { $gte: lowestPrice, $lte: hiestprice },
-      });
-    }
-    return this;
-  }
-  capcity() {
-    const capacity = this?.query?.capacity;
-    if (capacity) {
-      const newCapacity = (capacity as string).split("-");
-      const lowestPrice = Number(newCapacity[0]);
-      const hiestprice = Number(newCapacity[1]);
-      // let rangevalue = newRange.map((range) => new RegExp(`^${range}$`, "i"));
-      this.modelQuery = this.modelQuery.find({
-        capacity: { $gte: lowestPrice, $lte: hiestprice },
-      });
-    }
-    return this;
-  }
-  //   sort
+
   sort() {
     const sort = this?.query?.sort || "-createdAt";
     this.modelQuery = this.modelQuery.sort(sort as string);

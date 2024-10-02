@@ -10,6 +10,7 @@ const createRoomsValidationSchema = zod_1.z.object({
         capacity: zod_1.z.number(),
         pricePerSlot: zod_1.z.number(),
         amenities: zod_1.z.array(zod_1.z.string()),
+        roomImg: zod_1.z.array(zod_1.z.string()),
     }),
 });
 const updateRoomsValidationSchema = zod_1.z.object({
@@ -20,6 +21,7 @@ const updateRoomsValidationSchema = zod_1.z.object({
         capacity: zod_1.z.number().optional(),
         pricePerSlot: zod_1.z.number().optional(),
         amenities: zod_1.z.array(zod_1.z.string()).optional(),
+        roomImg: zod_1.z.array(zod_1.z.string()).optional(),
     }),
 });
 exports.roomValidation = {

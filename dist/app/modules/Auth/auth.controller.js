@@ -17,7 +17,6 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const auth_service_1 = require("./auth.service");
-const AppError_1 = __importDefault(require("../../errors/AppError"));
 const signUp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.authServices.signUpIntoDb(req.body);
     (0, sendResponse_1.default)(res, {
@@ -29,21 +28,36 @@ const signUp = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
 }));
 // login
 const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield auth_service_1.authServices.loginDb(req.body);
-        res.status(http_status_1.default.OK).json({
-            success: true,
-            statusCode: http_status_1.default.OK,
-            message: "User logged in successfully",
-            token: result === null || result === void 0 ? void 0 : result.token,
-            data: result === null || result === void 0 ? void 0 : result.existingUser,
-        });
-    }
-    catch (error) {
-        throw new AppError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, error);
-    }
+    const result = yield auth_service_1.authServices.loginDb(req.body);
+    res.status(http_status_1.default.OK).json({
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User logged in successfully",
+        token: result === null || result === void 0 ? void 0 : result.token,
+        data: result === null || result === void 0 ? void 0 : result.existingUser,
+    });
+}));
+const getOneUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.authServices.getOneUserDb(req.query);
+    res.status(http_status_1.default.OK).json({
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User got successfully",
+        data: result,
+    });
+}));
+const makeAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.authServices.makeAdminDb(req.params.id);
+    res.status(http_status_1.default.OK).json({
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User Successfully Promototed to admin",
+        data: result,
+    });
 }));
 exports.authController = {
     signUp,
     login,
+    makeAdmin,
+    getOneUser,
 };

@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authServices = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const AppError_1 = __importDefault(require("../../errors/AppError"));
+const AppError_1 = __importDefault(require("../../erros/AppError"));
 const user_model_1 = require("../User/user.model");
 const auth_utils_1 = require("./auth.utils");
 const config_1 = __importDefault(require("../../config"));
@@ -29,22 +29,41 @@ const signUpIntoDb = (payLoad) => __awaiter(void 0, void 0, void 0, function* ()
 });
 const loginDb = (payLoad) => __awaiter(void 0, void 0, void 0, function* () {
     // check user exist
-    const existingUser = yield user_model_1.User.findOne({
-        email: payLoad.email,
-    });
+    const existingUser = yield user_model_1.User.findOne({ email: payLoad.email });
     if (!existingUser) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, `User not found with this ${payLoad.email}`);
     }
+    const matched = yield user_model_1.User.isPasswordMatched(payLoad.password, existingUser === null || existingUser === void 0 ? void 0 : existingUser.password);
+    if (!matched) {
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Password do not matched");
+    }
     const tokenPayload = {
+        name: existingUser === null || existingUser === void 0 ? void 0 : existingUser.name,
         email: existingUser === null || existingUser === void 0 ? void 0 : existingUser.email,
         role: existingUser === null || existingUser === void 0 ? void 0 : existingUser.role,
     };
-    const token = (0, auth_utils_1.createToken)(tokenPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
-    const tokenWithBearer = token;
-    const result = { existingUser, token: tokenWithBearer };
+    const token = (0, auth_utils_1.createToken)(tokenPayload, config_1.default.Access_Token_Secret, config_1.default.JWT_ACCESS_EXPIRE_IN);
+    const result = { existingUser, token };
     return result;
+});
+const getOneUserDb = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield user_model_1.User.findOne(email);
+});
+const makeAdminDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const userExist = yield user_model_1.User.findOne({ _id: id });
+    if (!userExist) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found or role not matched");
+    }
+    if ((userExist === null || userExist === void 0 ? void 0 : userExist.role) === "user") {
+        return yield user_model_1.User.findByIdAndUpdate(id, { role: "admin" }, { new: true, runValidators: true });
+    }
+    if ((userExist === null || userExist === void 0 ? void 0 : userExist.role) === "admin") {
+        return yield user_model_1.User.findByIdAndUpdate(id, { role: "user" }, { new: true, runValidators: true });
+    }
 });
 exports.authServices = {
     signUpIntoDb,
     loginDb,
+    makeAdminDb,
+    getOneUserDb,
 };
